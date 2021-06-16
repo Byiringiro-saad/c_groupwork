@@ -131,10 +131,34 @@ void getUserWithCashNo(){
         }
 }
 
+void residential(){
+	float units;
+	int ans;
+	printf("Have you bought any units before in this month? 1 or 0: ");
+	scanf("%d",&ans);
+	if(ans==1){
+		printf("Byeeee *_*");
+	}else{
+		if(money<1335){
+			units = (money/89);
+		}else{
+			units = 15;
+			money -= 1335;
+			if(money<7420){
+				units += (money/212);
+			}else{
+				units = units + 35;
+				money -= 7420;
+				units += (money/249);
+			}
+		}
+	}
+	printf("You have received %.2f KWH.", units);
 
+}
 void checkCategory(char category[]){
    if(!strcmp(category,"residential")){
-       printf("execute Residential function here");
+       residential();
    }
    if(!strcmp(category,"non-residential")){
        printf("execute non-residential function here");
