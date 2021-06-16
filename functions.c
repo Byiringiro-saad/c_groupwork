@@ -46,7 +46,7 @@ void registerUser(){
             strcpy(customer.category, "health facility");
             break;
         case 7:
-            strcpy(customer.category, "hotel");
+            strcpy(customer.category, "broadcaster");
             break;
         case 8:
             strcpy(customer.category, "commercial data center");

@@ -34,6 +34,7 @@ int main()
     {
         getUserWithCashNo();
         checkCategory(customer.category);
+
     }
     else if(next_step==3)
     {
