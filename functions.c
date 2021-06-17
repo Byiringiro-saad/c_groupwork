@@ -69,7 +69,7 @@ void registerUser(){
         printf("Units: %d\n", customer.prev_units);
 
         FILE *fptr;
-        fptr = fopen("Clients.bin", "a");
+        fptr = fopen("Clients.csv", "a");
 
         if (fptr == NULL)
         {
@@ -82,16 +82,19 @@ void registerUser(){
 
 void getAllUsers(){
     FILE *fptr;
-    fptr = fopen("Clients.bin", "r");
+    fptr = fopen("Clients.csv", "r");
 
     if (fptr == NULL)
     {
         printf("Failed to open the file.\n");
         exit(-1);
     }
+        int d = 1;
     while (fread(&customer, sizeof(Client), 1, fptr))
     {
-        printf("Name: %s CashPower: %d \t Category: %s \n", customer.names, customer.cashpower_no, customer.category);
+        printf("User %d\n", d);
+        printf("Name: %sCashPower: %d \nCategory: %s \n", customer.names, customer.cashpower_no, customer.category);
+        d++;
     }
 }
 
@@ -103,7 +106,7 @@ void getUserWithCashNo(){
         scanf("%d", &money);
 
         FILE *fptr;
-        fptr = fopen("Clients.bin", "r");
+        fptr = fopen("Clients.csv", "r");
 
         if (fptr == NULL)
         {
@@ -114,6 +117,7 @@ void getUserWithCashNo(){
         int flag = 0;
         while (fread(&customer, sizeof(Client), 1, fptr))
         {
+            
             if(customer.cashpower_no==meter_no){
                 flag = 1;
                 break;
@@ -133,7 +137,7 @@ void getUserWithCashNo(){
         }
 }
 
-int telecom_tower(int money){
+void telecom_tower(int money){
     int units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -144,7 +148,7 @@ int telecom_tower(int money){
     return 0;
  }
 
-int water_treatment(int money){
+void water_treatment(int money){
     int units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -155,7 +159,7 @@ int water_treatment(int money){
     return 0;
  }
 
-int hotel(int money){
+void hotel(int money){
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -163,10 +167,9 @@ int hotel(int money){
     units=money/157;
     printf("Baught Units : %f", units);
     }
-    return 0;
  }
 
-int health_center(int money){
+void health_center(int money){
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -177,7 +180,7 @@ int health_center(int money){
     return 0;
  }
 
-int broadcaster(int money){
+void broadcaster(int money){
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -185,10 +188,9 @@ int broadcaster(int money){
     units=money/192;
     printf("Baught  Units : %f", units);
     }
-    return 0;
  }
  
-int data_center(int money){
+void data_center(int money){
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -196,12 +198,74 @@ int data_center(int money){
     units=money/179;
     printf("Baught Units : %f", units);
     }
-    return 0;
 }
+void residential(){
+	float units;
+	int ans;
+	float ub;       //units before
+	float ur;      //units remaining
+	float mur;     //money of units remaining
+	printf("Have you bought any units before in this month? 1 or 0: ");
+	scanf("%d",&ans);
+	if(ans==1){
+		printf("How many have u bought?  ");
+		scanf("%d",&ub);
+		if(ub<15){
+			ur = 15-ub;
+			mur = ur*89;
+			if(mur>money){
+				units=money/89;
+			}
+			else{
+				units = ur;
+				money -=mur;
+				if(money<7420){
+					units += (money/212);
+				}else{
+					units = units + 35;
+					money -= 7420;
+					units += (money/249);
+				}
+			}
+		}
+		else{
+			if(ub>50){
+				ur=50-ub;
+				mur = ur*212;
+				if(mur>money){
+					units=money/212;
+				}
+				else{
+					units = ur;
+					money = money-mur;
+					units=units+(money/249);
+				}
+			}
+			else{
+				units=money/249;
+			}
+		}
+	}else{
+		if(money<1335){
+			units = (money/89);
+		}else{
+			units = 15;
+			money -= 1335;
+			if(money<7420){
+				units += (money/212);
+			}else{
+				units = units + 35;
+				money -= 7420;
+				units += (money/249);
+			}
+		}
+	}
+	printf("You have received %.2f KWH.", units);
 
+}
 void checkCategory(char category[]){
    if(!strcmp(category,"residential")){
-       printf("execute residential function here");
+       residential();
    }
    if(!strcmp(category,"non-residential")){
        printf("execute non-residential function here");
