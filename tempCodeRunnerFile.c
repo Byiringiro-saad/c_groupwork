@@ -1,1 +1,1 @@
-int
+ printf("%d",generateToken());  

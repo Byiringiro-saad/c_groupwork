@@ -11,6 +11,12 @@ typedef struct
     int prev_units;
 } Client;
 
+struct token {
+   long int token;
+   char status[40];
+   int cashpower_no;  
+} token_info;
+
 Client customer;
 int money;
 
@@ -22,7 +28,7 @@ int money;
 int main()
 {
     int next_step;
-    printf("<----------------Welcome to electricity buying system----------------->\n");
+    printf("\n\n<---------------- Welcome to electricity buying system ----------------->\n");
     printf("Choose action:\n1.Register\n2.Buy Electricity\n3.Get All Users\n");
     scanf("%d", &next_step);
 
