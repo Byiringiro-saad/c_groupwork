@@ -59,7 +59,7 @@ void registerUser(){
         }
 
         customer.cashpower_no = generateRandomCashNo();
-        customer.prev_units = 10;
+        customer.prev_units = 0;
 
         printf("Names: %s", customer.names);
         printf("meter no: %d\n", customer.cashpower_no);
@@ -91,7 +91,7 @@ void getAllUsers(){
     while (fread(&customer, sizeof(Client), 1, fptr))
     {
         printf("User %d\n", d);
-        printf("Name: %sCashPower: %d \nCategory: %s \n", customer.names, customer.cashpower_no, customer.category);
+        printf("Name: %sCashPower: %d \nCategory: %s \nUnits: %d\n", customer.names, customer.cashpower_no, customer.category, customer.prev_units);
         d++;
     }
 }
@@ -224,4 +224,40 @@ void checkCategory(char category[]){
    if(!strcmp(category,"commercial data center")){
        printf("execute commercial data center function here");
    }
+}
+
+void updateUnits(int units){
+    Client temp_customer;
+    FILE *fptr;
+    FILE *temp_file;
+    fptr = fopen("Clients.csv","r");
+    temp_file = fopen("temp_clients.csv", "w");
+
+    if((fptr==NULL)||(temp_file==NULL)){
+        printf("Error while opening files...");
+        exit(-1);
+    }
+    int flag = 0;
+    while (fread(&temp_customer,sizeof(Client),1,fptr))
+    {
+        if(temp_customer.cashpower_no==customer.cashpower_no){
+            printf("Customer meter no are equal\n");
+            temp_customer.prev_units = temp_customer.prev_units + units;
+            flag = 1;
+        }
+        fwrite(&temp_customer, sizeof(Client), 1, temp_file);
+    }
+    
+    fclose(temp_file);
+    fclose(fptr);
+
+    if(flag){
+        fptr = fopen("Clients.csv","w");
+        temp_file = fopen("temp_clients.csv", "r");
+        while (fread(&temp_customer,sizeof(Client),1,temp_file)){
+            fwrite(&temp_customer, sizeof(Client),1, fptr);
+        }
+        fclose(fptr);
+        fclose(temp_file);
+    }
 }

@@ -18,7 +18,6 @@ int money;
 
 #include "functions.c"  
 
-
 int main()
 {
     int next_step;
@@ -34,7 +33,7 @@ int main()
     {
         getUserWithCashNo();
         checkCategory(customer.category);
-
+        
     }
     else if(next_step==3)
     {
