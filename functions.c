@@ -134,10 +134,49 @@ void getUserWithCashNo(){
 void residential(){
 	float units;
 	int ans;
+	float ub;       //units before
+	float ur;      //units remaining
+	float mur;     //money of units remaining
 	printf("Have you bought any units before in this month? 1 or 0: ");
 	scanf("%d",&ans);
 	if(ans==1){
-		printf("Byeeee *_*");
+		printf("How many have u bought?  ");
+		scanf("%d",&ub);
+		if(ub<15){
+			ur = 15-ub;
+			mur = ur*89;
+			if(mur>money){
+				units=money/89;
+			}
+			else{
+				units = ur;
+				money -=mur;
+				if(money<7420){
+					units += (money/212);
+				}else{
+					units = units + 35;
+					money -= 7420;
+					units += (money/249);
+				}
+			}
+		}
+		else{
+			if(ub>50){
+				ur=50-ub;
+				mur = ur*212;
+				if(mur>money){
+					units=money/212;
+				}
+				else{
+					units = ur;
+					money = money-mur;
+					units=units+(money/249);
+				}
+			}
+			else{
+				units=money/249;
+			}
+		}
 	}else{
 		if(money<1335){
 			units = (money/89);
