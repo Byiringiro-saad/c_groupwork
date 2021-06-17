@@ -58,8 +58,30 @@ void registerUser()
         exit(-1);
         break;
     }
+    int random_cashpower_no = generateRandomCashNo();
+    int check = 1;
+    FILE *fptr;
+    fptr = fopen("Clients.csv", "r");
+
+    if (fptr == NULL)
+    {
+        printf("Failed to open the file.\n");
+        exit(-1);
+    }
+        while (fread(&customer, sizeof(Client), 1, fptr))
+        {
+            if (customer.cashpower_no == random_cashpower_no)
+            {
+                check = 0;
+                break;
+            }
+
+        }
+
+    fclose(fptr);
 
     customer.cashpower_no = generateRandomCashNo();
+
     token_info.cashpower_no = generateRandomCashNo();
     customer.prev_units = 0;
 
