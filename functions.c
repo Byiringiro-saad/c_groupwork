@@ -67,7 +67,7 @@ void registerUser(){
         printf("Units: %d\n", customer.prev_units);
 
         FILE *fptr;
-        fptr = fopen("Clients.bin", "a");
+        fptr = fopen("Clients.csv", "a");
 
         if (fptr == NULL)
         {
@@ -80,16 +80,19 @@ void registerUser(){
 
 void getAllUsers(){
     FILE *fptr;
-    fptr = fopen("Clients.bin", "r");
+    fptr = fopen("Clients.csv", "r");
 
     if (fptr == NULL)
     {
         printf("Failed to open the file.\n");
         exit(-1);
     }
+        int d = 1;
     while (fread(&customer, sizeof(Client), 1, fptr))
     {
-        printf("Name: %s CashPower: %d \t Category: %s \n", customer.names, customer.cashpower_no, customer.category);
+        printf("User %d\n", d);
+        printf("Name: %sCashPower: %d \nCategory: %s \n", customer.names, customer.cashpower_no, customer.category);
+        d++;
     }
 }
 
@@ -101,7 +104,7 @@ void getUserWithCashNo(){
         scanf("%d", &money);
 
         FILE *fptr;
-        fptr = fopen("Clients.bin", "r");
+        fptr = fopen("Clients.csv", "r");
 
         if (fptr == NULL)
         {
@@ -112,6 +115,7 @@ void getUserWithCashNo(){
         int flag = 0;
         while (fread(&customer, sizeof(Client), 1, fptr))
         {
+            
             if(customer.cashpower_no==meter_no){
                 flag = 1;
                 break;
