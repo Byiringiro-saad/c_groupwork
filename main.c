@@ -22,7 +22,7 @@ int money;
 int main()
 {
     int next_step;
-    printf("<----------------Welcome to electricity buying system----------------->\n");
+    printf("\n\n<---------------- Welcome to electricity buying system ----------------->\n");
     printf("Choose action:\n1.Register\n2.Buy Electricity\n3.Get All Users\n");
     scanf("%d", &next_step);
 
