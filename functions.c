@@ -316,3 +316,4 @@ int non_residential(int amount) {
   }
   return units;
 }
+}
