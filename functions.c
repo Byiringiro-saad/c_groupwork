@@ -142,7 +142,48 @@ void getUserWithCashNo()
     }
 }
 
-void telecom_tower(int money)
+void updateUnits(int units)
+{
+    Client temp_customer;
+    FILE *fptr;
+    FILE *temp_file;
+    fptr = fopen("Clients.csv", "r");
+    temp_file = fopen("temp_clients.csv", "w");
+
+    if ((fptr == NULL) || (temp_file == NULL))
+    {
+        printf("Error while opening files...");
+        exit(-1);
+    }
+    int flag = 0;
+    while (fread(&temp_customer, sizeof(Client), 1, fptr))
+    {
+        if (temp_customer.cashpower_no == customer.cashpower_no)
+        {
+            printf("Customer meter no are equal\n");
+            temp_customer.prev_units = temp_customer.prev_units + units;
+            flag = 1;
+        }
+        fwrite(&temp_customer, sizeof(Client), 1, temp_file);
+    }
+
+    fclose(temp_file);
+    fclose(fptr);
+
+    if (flag)
+    {
+        fptr = fopen("Clients.csv", "w");
+        temp_file = fopen("temp_clients.csv", "r");
+        while (fread(&temp_customer, sizeof(Client), 1, temp_file))
+        {
+            fwrite(&temp_customer, sizeof(Client), 1, fptr);
+        }
+        fclose(fptr);
+        fclose(temp_file);
+    }
+}
+
+float telecom_tower(int money)
 {
     int units;
     if (money < 5000)
@@ -157,7 +198,7 @@ void telecom_tower(int money)
     return 0;
 }
 
-void water_treatment(int money)
+float water_treatment(int money)
 {
     int units;
     if (money < 5000)
@@ -172,7 +213,7 @@ void water_treatment(int money)
     return 0;
 }
 
-void hotel(int money)
+float hotel(int money)
 {
     float units;
     if (money < 5000)
@@ -186,7 +227,7 @@ void hotel(int money)
     }
 }
 
-void health_center(int money)
+float health_center(int money)
 {
     float units;
     if (money < 5000)
@@ -201,7 +242,7 @@ void health_center(int money)
     return 0;
 }
 
-void broadcaster(int money)
+float broadcaster(int money)
 {
     float units;
     if (money < 5000)
@@ -215,7 +256,7 @@ void broadcaster(int money)
     }
 }
 
-void data_center(int money)
+float data_center(int money)
 {
     float units;
     if (money < 5000)
@@ -228,19 +269,14 @@ void data_center(int money)
         printf("Baught Units : %f", units);
     }
 }
-void residential()
+float residential()
 {
     float units;
-    int ans;
-    float ub;  //units before
+    float ub = customer.prev_units;  //units before
     float ur;  //units remaining
     float mur; //money of units remaining
-    printf("Have you bought any units before in this month? 1 or 0: ");
-    scanf("%d", &ans);
-    if (ans == 1)
+    if (ub > 0)
     {
-        printf("How many have u bought?  ");
-        scanf("%d", &ub);
         if (ub < 15)
         {
             ur = 15 - ub;
@@ -310,6 +346,7 @@ void residential()
             }
         }
     }
+    updateUnits(units);
     printf("You have received %.2f KWH.", units);
 }
 void checkCategory(char category[])
@@ -348,46 +385,6 @@ void checkCategory(char category[])
     }
 }
 
-void updateUnits(int units)
-{
-    Client temp_customer;
-    FILE *fptr;
-    FILE *temp_file;
-    fptr = fopen("Clients.csv", "r");
-    temp_file = fopen("temp_clients.csv", "w");
-
-    if ((fptr == NULL) || (temp_file == NULL))
-    {
-        printf("Error while opening files...");
-        exit(-1);
-    }
-    int flag = 0;
-    while (fread(&temp_customer, sizeof(Client), 1, fptr))
-    {
-        if (temp_customer.cashpower_no == customer.cashpower_no)
-        {
-            printf("Customer meter no are equal\n");
-            temp_customer.prev_units = temp_customer.prev_units + units;
-            flag = 1;
-        }
-        fwrite(&temp_customer, sizeof(Client), 1, temp_file);
-    }
-
-    fclose(temp_file);
-    fclose(fptr);
-
-    if (flag)
-    {
-        fptr = fopen("Clients.csv", "w");
-        temp_file = fopen("temp_clients.csv", "r");
-        while (fread(&temp_customer, sizeof(Client), 1, temp_file))
-        {
-            fwrite(&temp_customer, sizeof(Client), 1, fptr);
-        }
-        fclose(fptr);
-        fclose(temp_file);
-    }
-}
 float non_residential(float amount)
 {
     float result;
