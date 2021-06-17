@@ -59,7 +59,9 @@ void registerUser(){
         }
 
         customer.cashpower_no = generateRandomCashNo();
+        token_info.cashpower_no =generateRandomCashNo();
         customer.prev_units = 0;
+        
 
         printf("Names: %s", customer.names);
         printf("meter no: %d\n", customer.cashpower_no);
@@ -135,6 +137,68 @@ void getUserWithCashNo(){
         }
 }
 
+void telecom_tower(int money){
+    int units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/201;
+    printf("You have Baught %d Units", units);
+    }
+    return 0;
+ }
+
+void water_treatment(int money){
+    int units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/126;
+    printf("You have Baught %d Units", units);
+    }
+    return 0;
+ }
+
+void hotel(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/157;
+    printf("Baught Units : %f", units);
+    }
+ }
+
+void health_center(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/186;
+    printf("Baught Units : %f", units);
+    }
+    return 0;
+ }
+
+void broadcaster(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/192;
+    printf("Baught  Units : %f", units);
+    }
+ }
+ 
+void data_center(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/179;
+    printf("Baught Units : %f", units);
+    }
+}
 void residential(){
 	float units;
 	int ans;
@@ -207,25 +271,26 @@ void checkCategory(char category[]){
        printf("execute non-residential function here");
    }
    if(!strcmp(category,"hotel")){
-       printf("execute hotel function here");
+       hotel(money);
    }
    if(!strcmp(category,"telecom tower")){
-       printf("execute telecom tower function here");
+       telecom_tower(money);
    }
    if(!strcmp(category,"water treatment plant or station")){
-       printf("execute water treatment plant or station function here");
+       water_treatment(money);
    }
    if(!strcmp(category,"health facility")){
-       printf("execute health facility function here");
+       health_center(money);
    }
    if(!strcmp(category,"broadcaster")){
-       printf("execute broadcaster function here");
+      broadcaster(money);
    }
    if(!strcmp(category,"commercial data center")){
-       printf("execute commercial data center function here");
+       data_center(money);
    }
 }
 
+<<<<<<< HEAD
 void updateUnits(int units){
     Client temp_customer;
     FILE *fptr;
@@ -260,4 +325,35 @@ void updateUnits(int units){
         fclose(fptr);
         fclose(temp_file);
     }
+=======
+float non_residential(float amount) {
+  	float result;
+  	int units;
+  if(!strcmp(customer.category, "non-residential")){
+  	if(customer.prev_units == 0){
+  		if(amount >= 0 && amount <= 22700){
+  		 units = amount/227;
+		  }else{
+		  	result = amount-22700;
+		  	units = (result/255)+100;
+		  }
+	  }else{
+	  	if(customer.prev_units < 100){
+	  		result=(100 - customer.prev_units)*227;
+	  		if(amount <= result){
+	  			units = amount/227;
+			  }else if(amount > result){
+			  	units = (amount - result)/255;
+			  	units += (100 - customer.prev_units);
+			  }
+			  else{
+			  	units = 0;
+			  }
+	  	}else if(customer.prev_units >= 100){
+	  		units = amount/227;
+		  }
+	  }
+  }
+  return units;
+>>>>>>> 22dc207d4fb6bb0a90bcb77a36be54b36b58e6bc
 }

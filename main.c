@@ -11,6 +11,12 @@ typedef struct
     int prev_units;
 } Client;
 
+struct token {
+   long int token;
+   char status[40];
+   int cashpower_no;  
+} token_info;
+
 Client customer;
 int money;
 
