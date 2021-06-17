@@ -231,7 +231,6 @@ void data_center(int money){
         printf("Baught  Units : %f", units);
     }
 }
-
 void checkCategory(char category[]){
    if(!strcmp(category,"residential")){
        residential();
@@ -259,6 +258,32 @@ void checkCategory(char category[]){
        data_center(money);
    }
 }
+
+void updateUnits(int units)
+{
+    Client temp_customer;
+    FILE *fptr;
+    FILE *temp_file;
+    fptr = fopen("Clients.csv", "r");
+    temp_file = fopen("temp_clients.csv", "w");
+
+    if ((fptr == NULL) || (temp_file == NULL))
+    {
+        printf("Error while opening files...");
+        exit(-1);
+    }
+    int flag = 0;
+    while (fread(&temp_customer, sizeof(Client), 1, fptr))
+    {
+        if (temp_customer.cashpower_no == customer.cashpower_no)
+        {
+            printf("Customer meter no are equal\n");
+            temp_customer.prev_units = temp_customer.prev_units + units;
+            flag = 1;
+        }
+        fwrite(&temp_customer, sizeof(Client), 1, temp_file);
+    }
+
 int non_residential(int amount) {
     int money;
   	int result;
