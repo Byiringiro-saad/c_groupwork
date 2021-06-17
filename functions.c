@@ -182,3 +182,34 @@ void checkCategory(char category[]){
        printf("execute commercial data center function here");
    }
 }
+
+float non_residential(float amount) {
+  	float result;
+  	int units;
+  if(!strcmp(customer.category, "non-residential")){
+  	if(customer.prev_units == 0){
+  		if(amount >= 0 && amount <= 22700){
+  		 units = amount/227;
+		  }else{
+		  	result = amount-22700;
+		  	units = (result/255)+100;
+		  }
+	  }else{
+	  	if(customer.prev_units < 100){
+	  		result=(100 - customer.prev_units)*227;
+	  		if(amount <= result){
+	  			units = amount/227;
+			  }else if(amount > result){
+			  	units = (amount - result)/255;
+			  	units += (100 - customer.prev_units);
+			  }
+			  else{
+			  	units = 0;
+			  }
+	  	}else if(customer.prev_units >= 100){
+	  		units = amount/227;
+		  }
+	  }
+  }
+  return units;
+}
