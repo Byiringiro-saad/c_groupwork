@@ -61,7 +61,7 @@ void registerUser(){
         customer.cashpower_no = generateRandomCashNo();
         token_info.cashpower_no =generateRandomCashNo();
         customer.prev_units = 10;
-        
+
 
         printf("Names: %s", customer.names);
         printf("meter no: %d\n", customer.cashpower_no);
@@ -117,7 +117,7 @@ void getUserWithCashNo(){
         int flag = 0;
         while (fread(&customer, sizeof(Client), 1, fptr))
         {
-            
+
             if(customer.cashpower_no==meter_no){
                 flag = 1;
                 break;
@@ -189,7 +189,7 @@ void broadcaster(int money){
     printf("Baught  Units : %f", units);
     }
  }
- 
+
 void data_center(int money){
     float units;
     if(money<5000){
@@ -268,7 +268,8 @@ void checkCategory(char category[]){
        residential();
    }
    if(!strcmp(category,"non-residential")){
-       printf("execute non-residential function here");
+       int saad = non_residential(money);
+       printf("\n%d", saad);
    }
    if(!strcmp(category,"hotel")){
        hotel(money);
@@ -290,32 +291,34 @@ void checkCategory(char category[]){
    }
 }
 
-float non_residential(float amount) {
-  	float result;
+int non_residential(int amount) {
+    int money;
+  	int result;
   	int units;
-  if(!strcmp(customer.category, "non-residential")){
-  	if(customer.prev_units == 0){
-  		if(amount >= 0 && amount <= 22700){
-  		 units = amount/227;
-		  }else{
-		  	result = amount-22700;
-		  	units = (result/255)+100;
-		  }
-	  }else{
+    if(customer.prev_units > 0){
+        if(amount >= 0 && amount <= 22700){
+            units = 100;
+            money = amount - 22700;
+            return units = units + (money / 225);
+        }else{
+            return units = amount / 227;
+        }
+    }else{
 	  	if(customer.prev_units < 100){
-	  		result=(100 - customer.prev_units)*227;
-	  		if(amount <= result){
-	  			units = amount/227;
-			  }else if(amount > result){
-			  	units = (amount - result)/255;
-			  	units += (100 - customer.prev_units);
-			  }
-			  else{
-			  	units = 0;
-			  }
-	  	}else if(customer.prev_units >= 100){
-	  		units = amount/227;
-		  }
+	  		if(customer.prev_units < 100){
+                result = 100 - customer.prev_units;
+                money = result * 227;
+
+                if(money > amount){
+                    return units = amount / 277;
+                }else{
+                    units = result;
+                    amount = amount - money;
+                    return units = units + ( amount / 255 );
+                }
+	  		}
+	  }else{
+        return units = amount - 255;
 	  }
   }
   return units;

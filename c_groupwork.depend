@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1623909407 source:d:\saad\school\c_groupwork\main.c
+1623956242 source:d:\saad\school\c_groupwork\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	"functions.c"
 
-1623913099 d:\saad\school\c_groupwork\functions.c
+1623956418 d:\saad\school\c_groupwork\functions.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

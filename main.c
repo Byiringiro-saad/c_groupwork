@@ -14,7 +14,7 @@ typedef struct
 struct token {
    long int token;
    char status[40];
-   int cashpower_no;  
+   int cashpower_no;
 } token_info;
 
 Client customer;
@@ -22,34 +22,27 @@ int money;
 
 // Functions are included after the client structure and int money because they will also use them.
 
-#include "functions.c"  
+#include "functions.c"
 
 
-int main()
-{
+int main(){
     int next_step;
     printf("\n\n<---------------- Welcome to electricity buying system ----------------->\n");
     printf("Choose action:\n1.Register\n2.Buy Electricity\n3.Get All Users\n");
     scanf("%d", &next_step);
 
-    if (next_step == 1)
-    {
+    if (next_step == 1){
         registerUser();
     }
-    else if (next_step == 2)
-    {
+    else if (next_step == 2){
         getUserWithCashNo();
         checkCategory(customer.category);
-
     }
-    else if(next_step==3)
-    {
+    else if(next_step==3){
         getAllUsers();
     }else{
         printf("Invalid choice. Try again.");
         exit(-1);
     }
-
-
     return 0;
 }
