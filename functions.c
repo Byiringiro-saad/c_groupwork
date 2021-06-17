@@ -231,20 +231,6 @@ void data_center(int money){
         printf("Baught  Units : %f", units);
     }
 }
-
-void data_center(int money)
-{
-    float units;
-    if (money < 5000)
-    {
-        printf("Insufficient Balance");
-    }
-    else
-    {
-        units = money / 179;
-        printf("Baught Units : %f", units);
-    }
-}
 void checkCategory(char category[]){
    if(!strcmp(category,"residential")){
        residential();
@@ -271,41 +257,6 @@ void checkCategory(char category[]){
    if(!strcmp(category,"commercial data center")){
        data_center(money);
    }
-}
-void checkCategory(char category[])
-{
-    if (!strcmp(category, "residential"))
-    {
-        residential();
-    }
-    if (!strcmp(category, "non-residential"))
-    {
-        printf("execute non-residential function here");
-    }
-    if (!strcmp(category, "hotel"))
-    {
-        hotel(money);
-    }
-    if (!strcmp(category, "telecom tower"))
-    {
-        telecom_tower(money);
-    }
-    if (!strcmp(category, "water treatment plant or station"))
-    {
-        water_treatment(money);
-    }
-    if (!strcmp(category, "health facility"))
-    {
-        health_center(money);
-    }
-    if (!strcmp(category, "broadcaster"))
-    {
-        broadcaster(money);
-    }
-    if (!strcmp(category, "commercial data center"))
-    {
-        data_center(money);
-    }
 }
 
 void updateUnits(int units)
