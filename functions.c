@@ -59,7 +59,9 @@ void registerUser(){
         }
 
         customer.cashpower_no = generateRandomCashNo();
+        token_info.cashpower_no =generateRandomCashNo();
         customer.prev_units = 10;
+        
 
         printf("Names: %s", customer.names);
         printf("meter no: %d\n", customer.cashpower_no);
@@ -131,30 +133,95 @@ void getUserWithCashNo(){
         }
 }
 
+int telecom_tower(int money){
+    int units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/201;
+    printf("You have Baught %d Units", units);
+    }
+    return 0;
+ }
+
+int water_treatment(int money){
+    int units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/126;
+    printf("You have Baught %d Units", units);
+    }
+    return 0;
+ }
+
+int hotel(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/157;
+    printf("Baught Units : %f", units);
+    }
+    return 0;
+ }
+
+int health_center(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/186;
+    printf("Baught Units : %f", units);
+    }
+    return 0;
+ }
+
+int broadcaster(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/192;
+    printf("Baught  Units : %f", units);
+    }
+    return 0;
+ }
+ 
+int data_center(int money){
+    float units;
+    if(money<5000){
+    printf("Insufficient Balance");
+    }else{
+    units=money/179;
+    printf("Baught Units : %f", units);
+    }
+    return 0;
+}
 
 void checkCategory(char category[]){
    if(!strcmp(category,"residential")){
-       printf("execute Residential function here");
+       printf("execute residential function here");
    }
    if(!strcmp(category,"non-residential")){
        printf("execute non-residential function here");
    }
    if(!strcmp(category,"hotel")){
-       printf("execute hotel function here");
+       hotel(money);
    }
    if(!strcmp(category,"telecom tower")){
-       printf("execute telecom tower function here");
+       telecom_tower(money);
    }
    if(!strcmp(category,"water treatment plant or station")){
-       printf("execute water treatment plant or station function here");
+       water_treatment(money);
    }
    if(!strcmp(category,"health facility")){
-       printf("execute health facility function here");
+       health_center(money);
    }
    if(!strcmp(category,"broadcaster")){
-       printf("execute broadcaster function here");
+      broadcaster(money);
    }
    if(!strcmp(category,"commercial data center")){
-       printf("execute commercial data center function here");
+       data_center(money);
    }
 }
