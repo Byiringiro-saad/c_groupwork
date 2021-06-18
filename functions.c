@@ -24,67 +24,69 @@ int generateRandomCashNo()
     return cashpower1 + cashpower2;
 }
 
-void registerUser(){
+void registerUser()
+{
     int category;
-        printf("Names: ");
-        fflush(stdin);
-        fgets(customer.names, 49, stdin);
-        printf("Choose category: \n");
-        printf("1.Residential\n2.Non-residential\n3.Telecom Tower\n4.Water treament plant or station\n");
-        printf("5.Hotel\n6.Health Facility\n7.Broadcaster\n8.Commercial data center\n");
-        scanf("%d", &category);
+    printf("Names: ");
+    fflush(stdin);
+    fgets(customer.names, 49, stdin);
+    printf("Choose category: \n");
+    printf("1.Residential\n2.Non-residential\n3.Telecom Tower\n4.Water treament plant or station\n");
+    printf("5.Hotel\n6.Health Facility\n7.Broadcaster\n8.Commercial data center\n");
+    scanf("%d", &category);
 
-        switch (category)
-        {
-        case 1:
-            strcpy(customer.category, "residential");
-            break;
-        case 2:
-            strcpy(customer.category, "non-residential");
-            break;
-        case 3:
-            strcpy(customer.category, "telecom tower");
-            break;
-        case 4:
-            strcpy(customer.category, "water treatment plant or station");
-            break;
-        case 5:
-            strcpy(customer.category, "hotel");
-            break;
-        case 6:
-            strcpy(customer.category, "health facility");
-            break;
-        case 7:
-            strcpy(customer.category, "broadcaster");
-            break;
-        case 8:
-            strcpy(customer.category, "commercial data center");
-            break;
+    switch (category)
+    {
+    case 1:
+        strcpy(customer.category, "residential");
+        break;
+    case 2:
+        strcpy(customer.category, "non-residential");
+        break;
+    case 3:
+        strcpy(customer.category, "telecom tower");
+        break;
+    case 4:
+        strcpy(customer.category, "water treatment plant or station");
+        break;
+    case 5:
+        strcpy(customer.category, "hotel");
+        break;
+    case 6:
+        strcpy(customer.category, "health facility");
+        break;
+    case 7:
+        strcpy(customer.category, "broadcaster");
+        break;
+    case 8:
+        strcpy(customer.category, "commercial data center");
+        break;
 
-        default:
-            printf("Invalid choice please try again.");
-            exit(-1);
-            break;
-        }
+    default:
+        printf("Invalid choice please try again.");
+        exit(-1);
+        break;
+    }
 
         customer.cashpower_no = generateRandomCashNo();
         customer.prev_units = 10;
 
-        printf("Names: %s", customer.names);
-        printf("meter no: %d\n", customer.cashpower_no);
-        printf("category: %s\n", customer.category);
-        printf("Units: %d\n", customer.prev_units);
 
-        FILE *fptr;
-        fptr = fopen("Clients.csv", "a");
+    printf("Names: %s", customer.names);
+    printf("meter no: %d\n", customer.cashpower_no);
+    printf("category: %s\n", customer.category);
+    printf("Units: %d\n", customer.prev_units);
 
-        if (fptr == NULL)
-        {
-            printf("Failed to open the file.\n");
-            exit(-1);
-        }
-        fwrite(&customer, sizeof(Client), 1, fptr);
-        printf("User registration completed.\n");
+    FILE *fptr;
+    fptr = fopen("Clients.csv", "a");
+
+    if (fptr == NULL)
+    {
+        printf("Failed to open the file.\n");
+        exit(-1);
+    }
+    fwrite(&customer, sizeof(Client), 1, fptr);
+    printf("User registration completed.\n");
 }
 
 void keep_token(){
@@ -113,35 +115,38 @@ void getAllUsers(){
         printf("Failed to open the file.\n");
         exit(-1);
     }
-        int d = 1;
+    int d = 1;
     while (fread(&customer, sizeof(Client), 1, fptr))
     {
         printf("User %d\n", d);
-        printf("Name: %sCashPower: %d \nCategory: %s \n", customer.names, customer.cashpower_no, customer.category);
+        printf("Name: %sCashPower: %d \nCategory: %s \nUnits: %d\n", customer.names, customer.cashpower_no, customer.category, customer.prev_units);
         d++;
     }
 }
 
-void getUserWithCashNo(){
+void getUserWithCashNo()
+{
     int meter_no;
-        printf("Enter meter no: ");
-        scanf("%d", &meter_no);
-        printf("Enter Amount: ");
-        scanf("%d", &money);
+    printf("Enter meter no: ");
+    scanf("%d", &meter_no);
+    printf("Enter Amount: ");
+    scanf("%d", &money);
 
-        FILE *fptr;
-        fptr = fopen("Clients.csv", "r");
+    FILE *fptr;
+    fptr = fopen("Clients.csv", "r");
 
-        if (fptr == NULL)
+    if (fptr == NULL)
+    {
+        printf("Failed to open the file.\n");
+        exit(-1);
+    }
+
+    int flag = 0;
+    while (fread(&customer, sizeof(Client), 1, fptr))
+    {
+
+        if (customer.cashpower_no == meter_no)
         {
-            printf("Failed to open the file.\n");
-            exit(-1);
-        }
-
-        int flag = 0;
-        while (fread(&customer, sizeof(Client), 1, fptr))
-        {
-            
             if(customer.cashpower_no==meter_no){
                 flag = 1;
                 break;
@@ -151,17 +156,66 @@ void getUserWithCashNo(){
             printf("Invalid meter number. Try again.");
             exit(-1);
         }
+    }
+    if (!flag)
+    {
+        printf("Invalid meter number. Try again.");
+        exit(-1);
+    }
 
-        int proceed=0;
-        printf("You have entered %d meter number which is for %s\n1.Continue\n0.Exit\n", customer.cashpower_no,customer.names);
-        scanf("%d", &proceed);
-        if(!proceed){
-            printf("Exiting....");
-            exit(-1);
-        }
+    int proceed = 0;
+    printf("You have entered %d meter number which is for %s\n1.Continue\n0.Exit\n", customer.cashpower_no, customer.names);
+    scanf("%d", &proceed);
+    if (!proceed)
+    {
+        printf("Exiting....");
+        exit(-1);
+    }
 }
 
-void telecom_tower(int money){
+void updateUnits(int units)
+{
+    Client temp_customer;
+    FILE *fptr;
+    FILE *temp_file;
+    fptr = fopen("Clients.csv", "r");
+    temp_file = fopen("temp_clients.csv", "w");
+
+    if ((fptr == NULL) || (temp_file == NULL))
+    {
+        printf("Error while opening files...");
+        exit(-1);
+    }
+    int flag = 0;
+    while (fread(&temp_customer, sizeof(Client), 1, fptr))
+    {
+        if (temp_customer.cashpower_no == customer.cashpower_no)
+        {
+            printf("Customer meter no are equal\n");
+            temp_customer.prev_units = temp_customer.prev_units + units;
+            flag = 1;
+        }
+        fwrite(&temp_customer, sizeof(Client), 1, temp_file);
+    }
+
+    fclose(temp_file);
+    fclose(fptr);
+
+    if (flag)
+    {
+        fptr = fopen("Clients.csv", "w");
+        temp_file = fopen("temp_clients.csv", "r");
+        while (fread(&temp_customer, sizeof(Client), 1, temp_file))
+        {
+            fwrite(&temp_customer, sizeof(Client), 1, fptr);
+        }
+        fclose(fptr);
+        fclose(temp_file);
+    }
+}
+
+float telecom_tower(int money)
+{
     int units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -174,7 +228,8 @@ void telecom_tower(int money){
     }
  }
 
-void water_treatment(int money){
+float water_treatment(int money)
+{
     int units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -187,7 +242,8 @@ void water_treatment(int money){
     }
  }
 
-void hotel(int money){
+float hotel(int money)
+{
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -198,9 +254,15 @@ void hotel(int money){
     generateToken();
     keep_token();
     }
- }
+    else
+    {
+        units = money / 157;
+        printf("Baught Units : %f", units);
+    }
+}
 
-void health_center(int money){
+float health_center(int money)
+{
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -213,7 +275,8 @@ void health_center(int money){
     }
  }
 
-void broadcaster(int money){
+float broadcaster(int money)
+{
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -225,8 +288,9 @@ void broadcaster(int money){
     keep_token();
     }
  }
- 
-void data_center(int money){
+
+float data_center(int money)
+{
     float units;
     if(money<5000){
     printf("Insufficient Balance");
@@ -237,6 +301,8 @@ void data_center(int money){
     generateToken();
     keep_token();
     }
+    updateUnits(units);
+    printf("You have received %.2f KWH.", units);
 }
 
 void residential(){
@@ -302,6 +368,37 @@ void residential(){
 	}
 	printf("You have received %.2f KWH.", units);
 
+int non_residential(int amount) {
+    int money;
+  	int result;
+  	int units;
+    if(customer.prev_units > 0){
+        if(amount >= 0 && amount <= 22700){
+            units = 100;
+            money = amount - 22700;
+            return units = units + (money / 225);
+        }else{
+            return units = amount / 227;
+        }
+    }else{
+	  	if(customer.prev_units < 100){
+	  		if(customer.prev_units < 100){
+                result = 100 - customer.prev_units;
+                money = result * 227;
+
+                if(money > amount){
+                    return units = amount / 277;
+                }else{
+                    units = result;
+                    amount = amount - money;
+                    return units = units + ( amount / 255 );
+                }
+	  		}
+	  }else{
+        return units = amount - 255;
+	  }
+  }
+  return units;
 }
 
 void checkCategory(char category[]){
@@ -309,7 +406,8 @@ void checkCategory(char category[]){
        residential();
    }
    if(!strcmp(category,"non-residential")){
-       printf("execute non-residential function here");
+       int saad = non_residential(money);
+       printf("\n%d", saad);
    }
    if(!strcmp(category,"hotel")){
        hotel(money);
@@ -336,7 +434,5 @@ void checkCategory(char category[]){
        printf("\n************************End**********************\n");
    }
 }
-
-
 
 //Remember call the generateToken() method and keep_token() after giving units to the customer.

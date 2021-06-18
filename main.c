@@ -22,8 +22,7 @@ char token[60];
 int money;
 // Functions are included after the client structure and int money because they will also use them.
 
-#include "functions.c"  
-
+#include "functions.c"
 
 int main()
 {
@@ -40,16 +39,15 @@ int main()
     {
         getUserWithCashNo();
         checkCategory(customer.category);
-
     }
-    else if(next_step==3)
+    else if (next_step == 3)
     {
         getAllUsers();
-    }else{
+    }
+    else
+    {
         printf("Invalid choice. Try again.");
         exit(-1);
     }
-
-
     return 0;
 }
