@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+char token[50];
 
 int main(){
-    return 0;
+  generateToken();
+  printf("%s",token);
 }

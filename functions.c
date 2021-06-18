@@ -3,6 +3,15 @@
 #include <string.h>
 #include <time.h>
 
+char generateToken() {
+    srand(time(0));
+    int tok1=rand();
+    int tok2=rand();
+    int tok3=rand();
+    sprintf(token,"%d-%d-%d",tok1,tok2,tok3);
+    printf("Token : %s",token);
+    }
+
 int generateRandomCashNo()
 {
     srand(time(NULL));
@@ -59,9 +68,7 @@ void registerUser(){
         }
 
         customer.cashpower_no = generateRandomCashNo();
-        token_info.cashpower_no =generateRandomCashNo();
         customer.prev_units = 10;
-        
 
         printf("Names: %s", customer.names);
         printf("meter no: %d\n", customer.cashpower_no);
@@ -78,6 +85,23 @@ void registerUser(){
         }
         fwrite(&customer, sizeof(Client), 1, fptr);
         printf("User registration completed.\n");
+}
+
+void keep_token(){
+    char status[50]="Unused";
+    token_info.cashpower_no =generateRandomCashNo();
+    strcpy(token_info.token,token);
+    strcpy(token_info.status,status);
+     FILE *fptr;
+        fptr = fopen("tokens.csv", "a");
+
+        if (fptr == NULL)
+        {
+            printf("Failed to open the file.\n");
+            exit(-1);
+        }
+        fwrite(&token_info, sizeof(token), 1, fptr);
+        printf("\npayment successfully.\n");
 }
 
 void getAllUsers(){
@@ -143,9 +167,11 @@ void telecom_tower(int money){
     printf("Insufficient Balance");
     }else{
     units=money/201;
-    printf("You have Baught %d Units", units);
+    printf("\n********************Electric Bill*******************\n");
+    printf("Units : %f\n", units);
+    generateToken();
+    keep_token();
     }
-    return 0;
  }
 
 void water_treatment(int money){
@@ -154,9 +180,11 @@ void water_treatment(int money){
     printf("Insufficient Balance");
     }else{
     units=money/126;
-    printf("You have Baught %d Units", units);
+    printf("\n********************Electric Bill*******************\n");
+    printf("Units : %f\n", units);
+    generateToken();
+    keep_token();
     }
-    return 0;
  }
 
 void hotel(int money){
@@ -165,7 +193,10 @@ void hotel(int money){
     printf("Insufficient Balance");
     }else{
     units=money/157;
-    printf("Baught Units : %f", units);
+     printf("\n********************Electric Bill*******************\n");
+    printf("Units : %f\n", units);
+    generateToken();
+    keep_token();
     }
  }
 
@@ -175,9 +206,11 @@ void health_center(int money){
     printf("Insufficient Balance");
     }else{
     units=money/186;
-    printf("Baught Units : %f", units);
+    printf("\n********************Electric Bill*******************\n");
+    printf("Units : %f\n", units);
+    generateToken();
+    keep_token();
     }
-    return 0;
  }
 
 void broadcaster(int money){
@@ -186,7 +219,10 @@ void broadcaster(int money){
     printf("Insufficient Balance");
     }else{
     units=money/192;
-    printf("Baught  Units : %f", units);
+    printf("\n********************Electric Bill*******************\n");
+    printf("Units : %f\n", units);
+    generateToken();
+    keep_token();
     }
  }
  
@@ -196,9 +232,13 @@ void data_center(int money){
     printf("Insufficient Balance");
     }else{
     units=money/179;
-    printf("Baught Units : %f", units);
+    printf("\n********************Electric Bill*******************\n");
+    printf("Units : %f\n", units);
+    generateToken();
+    keep_token();
     }
 }
+
 void residential(){
 	float units;
 	int ans;
@@ -263,6 +303,7 @@ void residential(){
 	printf("You have received %.2f KWH.", units);
 
 }
+
 void checkCategory(char category[]){
    if(!strcmp(category,"residential")){
        residential();
@@ -272,20 +313,30 @@ void checkCategory(char category[]){
    }
    if(!strcmp(category,"hotel")){
        hotel(money);
+       printf("\n************************End********************\n");
    }
    if(!strcmp(category,"telecom tower")){
        telecom_tower(money);
+       printf("\n************************End********************\n");
    }
    if(!strcmp(category,"water treatment plant or station")){
        water_treatment(money);
+       printf("\n************************End*********************\n");
    }
    if(!strcmp(category,"health facility")){
        health_center(money);
+       printf("\n************************End**********************\n");
    }
    if(!strcmp(category,"broadcaster")){
       broadcaster(money);
+      printf("\n*************************End**********************\n");
    }
    if(!strcmp(category,"commercial data center")){
        data_center(money);
+       printf("\n************************End**********************\n");
    }
 }
+
+
+
+//Remember call the generateToken() method and keep_token() after giving units to the customer.
