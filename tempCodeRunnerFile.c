@@ -1,1 +1,4 @@
- printf("%d",generateToken());  
+
+
+struct token {
+   char token[6
