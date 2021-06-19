@@ -12,13 +12,14 @@ typedef struct
 } Client;
 
 struct token {
-   long int token;
+   char token[60];
    char status[40];
    int cashpower_no;  
 } token_info;
 
 Client customer;
 int money;
+char token[60];
 
 // Functions are included after the client structure and int money because they will also use them.
 

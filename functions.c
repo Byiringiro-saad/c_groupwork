@@ -15,12 +15,81 @@ int generateRandomCashNo()
     return cashpower1 + cashpower2;
 }
 
+char generateToken() {
+    srand(time(0));
+    int tok1=rand();
+    int tok2=rand();
+    int tok3=rand();
+    sprintf(token,"%d-%d-%d",tok1,tok2,tok3);
+    printf("Token : %s",token);
+    
+}
+
+void keep_token(){
+    char status[50]="Unused";
+    token_info.cashpower_no =generateRandomCashNo();
+    strcpy(token_info.token,token);
+    strcpy(token_info.status,status);
+     FILE *fptr;
+        fptr = fopen("tokens.csv", "a");
+
+        if (fptr == NULL)
+        {
+            printf("Failed to open the file.\n");
+            exit(-1);
+        }
+        fwrite(&token_info, sizeof(token), 1, fptr);
+        printf("\npayment successfully.\n");
+}
+
+void updateUnits(int units)
+{
+    Client temp_customer;
+    FILE *fptr;
+    FILE *temp_file;
+    fptr = fopen("Clients.csv", "r");
+    temp_file = fopen("temp_clients.csv", "w");
+
+    if ((fptr == NULL) || (temp_file == NULL))
+    {
+        printf("Error while opening files...");
+        exit(-1);
+    }
+    int flag = 0;
+    while (fread(&temp_customer, sizeof(Client), 1, fptr))
+    {
+        if (temp_customer.cashpower_no == customer.cashpower_no)
+        {
+            temp_customer.prev_units = temp_customer.prev_units + units;
+            flag = 1;
+        }
+        fwrite(&temp_customer, sizeof(Client), 1, temp_file);
+    }
+
+    fclose(temp_file);
+    fclose(fptr);
+
+    if (flag)
+    {
+        fptr = fopen("Clients.csv", "w");
+        temp_file = fopen("temp_clients.csv", "r");
+        while (fread(&temp_customer, sizeof(Client), 1, temp_file))
+        {
+            fwrite(&temp_customer, sizeof(Client), 1, fptr);
+        }
+        fclose(fptr);
+        fclose(temp_file);
+    }
+    remove("temp_clients.csv");
+}
+
 void registerUser()
 {
     int category;
     printf("Names: ");
     fflush(stdin);
     fgets(customer.names, 49, stdin);
+    printf("Here is the name after scanning: %s \n", customer.names);
     printf("Choose category: \n");
     printf("1.Residential\n2.Non-residential\n3.Telecom Tower\n4.Water treament plant or station\n");
     printf("5.Hotel\n6.Health Facility\n7.Broadcaster\n8.Commercial data center\n");
@@ -59,26 +128,6 @@ void registerUser()
         break;
     }
     int random_cashpower_no = generateRandomCashNo();
-    int check = 1;
-    FILE *fptr;
-    fptr = fopen("Clients.csv", "r");
-
-    if (fptr == NULL)
-    {
-        printf("Failed to open the file.\n");
-        exit(-1);
-    }
-        while (fread(&customer, sizeof(Client), 1, fptr))
-        {
-            if (customer.cashpower_no == random_cashpower_no)
-            {
-                check = 0;
-                break;
-            }
-
-        }
-
-    fclose(fptr);
 
     customer.cashpower_no = generateRandomCashNo();
 
@@ -99,6 +148,8 @@ void registerUser()
         exit(-1);
     }
     fwrite(&customer, sizeof(Client), 1, fptr);
+
+    fclose(fptr);
     printf("User registration completed.\n");
 }
 
@@ -167,45 +218,55 @@ void getUserWithCashNo()
 void telecom_tower(int money)
 {
     int units;
-    if (money < 5000)
+    if (money < 201)
     {
         printf("Insufficient Balance");
     }
     else
     {
         units = money / 201;
-        printf("You have Baught %d Units", units);
+        printf("\n********************Electric Bill*******************\n");
+        printf("Units : %d\n", units);
+        updateUnits(units);
+        generateToken();
+        keep_token();
     }
-    return 0;
 }
 
 void water_treatment(int money)
 {
     int units;
-    if (money < 5000)
+    if (money < 126)
     {
         printf("Insufficient Balance");
     }
     else
     {
         units = money / 126;
-        printf("You have Baught %d Units", units);
+        printf("\n********************Electric Bill*******************\n");
+        printf("Units : %d\n", units);
+        updateUnits(units);
+        generateToken();
+        keep_token();
     }
-    return 0;
 }
 
 void hotel(int money)
 {
     float units;
-    if (money < 5000)
+    if (money < 157)
     {
         printf("Insufficient Balance");
     }
     else
     {
         units = money / 157;
-        printf("Baught Units : %f", units);
-    }
+        printf("\n********************Electric Bill*******************\n");
+        printf("Units : %f\n", units);
+        updateUnits(units);
+        generateToken();
+        keep_token();
+    }              
 }
 
 void health_center(int money)
@@ -217,10 +278,13 @@ void health_center(int money)
     }
     else
     {
-        units = money / 186;
-        printf("Baught Units : %f", units);
+        units=money/186;
+        printf("\n********************Electric Bill*******************\n");
+        printf("Units : %f\n", units);
+        updateUnits(units);
+        generateToken();
+        keep_token();
     }
-    return 0;
 }
 
 void broadcaster(int money)
@@ -233,7 +297,11 @@ void broadcaster(int money)
     else
     {
         units = money / 192;
-        printf("Baught  Units : %f", units);
+        printf("\n********************Electric Bill*******************\n");
+        printf("Units : %f\n", units);
+        updateUnits(units);
+        generateToken();
+        keep_token();
     }
 }
 
@@ -247,22 +315,23 @@ void data_center(int money)
     else
     {
         units = money / 179;
-        printf("Baught Units : %f", units);
+        printf("\n********************Electric Bill*******************\n");
+        printf("Units : %f\n", units);
+        generateToken();
+        keep_token();
+        updateUnits(units);
     }
+
 }
+
 void residential()
 {
-    float units;
-    int ans;
-    float ub;  //units before
-    float ur;  //units remaining
-    float mur; //money of units remaining
-    printf("Have you bought any units before in this month? 1 or 0: ");
-    scanf("%d", &ans);
-    if (ans == 1)
+    int units;
+    int ub = customer.prev_units;  //units before
+    int ur;  //units remaining
+    int mur; //money of units remaining
+    if (ub > 0)
     {
-        printf("How many have u bought?  ");
-        scanf("%d", &ub);
         if (ub < 15)
         {
             ur = 15 - ub;
@@ -274,16 +343,16 @@ void residential()
             else
             {
                 units = ur;
-                money -= mur;
+                money = money - mur;
                 if (money < 7420)
                 {
-                    units += (money / 212);
+                    units = units + (money / 212);
                 }
                 else
                 {
                     units = units + 35;
-                    money -= 7420;
-                    units += (money / 249);
+                    money = money - 7420;
+                    units = units + (money / 249);
                 }
             }
         }
@@ -319,21 +388,66 @@ void residential()
         else
         {
             units = 15;
-            money -= 1335;
+            money = money - 1335;
             if (money < 7420)
             {
-                units += (money / 212);
+                units = units + (money / 212);
             }
             else
             {
                 units = units + 35;
-                money -= 7420;
-                units += (money / 249);
+                money = money - 7420;
+                units = units + (money / 249);
             }
         }
     }
-    printf("You have received %.2f KWH.", units);
+    updateUnits(units);
+    printf("Units : %d\n", units);
+    generateToken();
+    keep_token();
+    // printf("You have received %.2f KWH.", units);
 }
+
+void non_residential(int amount) {
+    int money;
+  	int result;
+  	int units;
+    if(customer.prev_units > 0){
+        if(amount >= 0 && amount <= 22700){
+            units = 100;
+            money = amount - 22700;
+            units = units + (money / 225);
+        }else{
+            units = amount / 227;
+        }
+    }else{
+	  	if(customer.prev_units < 100){
+	  		if(customer.prev_units < 100){
+                result = 100 - customer.prev_units;
+                money = result * 227;
+
+                if(money > amount){
+                    units = amount / 277;
+                }else{
+                    units = result;
+                    amount = amount - money;
+                    units = units + ( amount / 255 );
+                }
+	  		}
+	  }else{
+        units = amount - 255;
+	  }
+  }
+//   printf("You have successfully purchased %d KWHs.\n");
+    printf("\n********************Electric Bill*******************\n");
+    printf("Units : %d\n", units);
+    generateToken();
+    keep_token();
+    updateUnits(units);
+}
+
+
+
 void checkCategory(char category[])
 {
     if (!strcmp(category, "residential"))
@@ -342,7 +456,7 @@ void checkCategory(char category[])
     }
     if (!strcmp(category, "non-residential"))
     {
-        printf("execute non-residential function here");
+        non_residential(money);
     }
     if (!strcmp(category, "hotel"))
     {
@@ -368,90 +482,4 @@ void checkCategory(char category[])
     {
         data_center(money);
     }
-}
-
-void updateUnits(int units)
-{
-    Client temp_customer;
-    FILE *fptr;
-    FILE *temp_file;
-    fptr = fopen("Clients.csv", "r");
-    temp_file = fopen("temp_clients.csv", "w");
-
-    if ((fptr == NULL) || (temp_file == NULL))
-    {
-        printf("Error while opening files...");
-        exit(-1);
-    }
-    int flag = 0;
-    while (fread(&temp_customer, sizeof(Client), 1, fptr))
-    {
-        if (temp_customer.cashpower_no == customer.cashpower_no)
-        {
-            printf("Customer meter no are equal\n");
-            temp_customer.prev_units = temp_customer.prev_units + units;
-            flag = 1;
-        }
-        fwrite(&temp_customer, sizeof(Client), 1, temp_file);
-    }
-
-    fclose(temp_file);
-    fclose(fptr);
-
-    if (flag)
-    {
-        fptr = fopen("Clients.csv", "w");
-        temp_file = fopen("temp_clients.csv", "r");
-        while (fread(&temp_customer, sizeof(Client), 1, temp_file))
-        {
-            fwrite(&temp_customer, sizeof(Client), 1, fptr);
-        }
-        fclose(fptr);
-        fclose(temp_file);
-    }
-}
-float non_residential(float amount)
-{
-    float result;
-    int units;
-    if (!strcmp(customer.category, "non-residential"))
-    {
-        if (customer.prev_units == 0)
-        {
-            if (amount >= 0 && amount <= 22700)
-            {
-                units = amount / 227;
-            }
-            else
-            {
-                result = amount - 22700;
-                units = (result / 255) + 100;
-            }
-        }
-        else
-        {
-            if (customer.prev_units < 100)
-            {
-                result = (100 - customer.prev_units) * 227;
-                if (amount <= result)
-                {
-                    units = amount / 227;
-                }
-                else if (amount > result)
-                {
-                    units = (amount - result) / 255;
-                    units += (100 - customer.prev_units);
-                }
-                else
-                {
-                    units = 0;
-                }
-            }
-            else if (customer.prev_units >= 100)
-            {
-                units = amount / 227;
-            }
-        }
-    }
-    return units;
 }
