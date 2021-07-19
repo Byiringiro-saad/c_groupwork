@@ -20,6 +20,8 @@ struct token {
 Client customer;
 char token[60];
 int money;
+char token[60];
+
 // Functions are included after the client structure and int money because they will also use them.
 
 #include "functions.c"
